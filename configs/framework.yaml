@@ -1,0 +1,63 @@
+repos:
+  - repo: local
+    hooks:
+      - id: noop-01
+        name: no-op 01
+        entry: "true"
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: noop-02
+        name: no-op 02
+        entry: "true"
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: noop-03
+        name: no-op 03
+        entry: "true"
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: noop-04
+        name: no-op 04
+        entry: "true"
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: noop-05
+        name: no-op 05
+        entry: "true"
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: noop-06
+        name: no-op 06
+        entry: "true"
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: noop-07
+        name: no-op 07
+        entry: "true"
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: noop-08
+        name: no-op 08
+        entry: "true"
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: noop-09
+        name: no-op 09
+        entry: "true"
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: noop-10
+        name: no-op 10
+        entry: "true"
+        language: system
+        always_run: true
+        pass_filenames: false

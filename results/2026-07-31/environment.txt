@@ -1,0 +1,15 @@
+date=2026-07-31
+os=macOS 15.7.7
+cpu=Apple M3 Pro, 12 cores
+memory=18 GiB
+prek=0.4.11+34 (5ed44a3ef86486895723c940766042e61567b3c4)
+pre_commit=4.6.1
+pre_commit_hooks=v6.0.0
+hyperfine=1.20.0
+rustc=1.97.0 (2d8144b78 2026-07-07)
+python=3.14.6
+workload_files=960
+warmups=5
+runs_per_order=15
+pooled_samples_per_command=30
+git_diff_runs=30

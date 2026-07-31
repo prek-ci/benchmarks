@@ -1,0 +1,5 @@
+.cache/
+.tools/
+.work/
+results/local-*/
+.DS_Store
