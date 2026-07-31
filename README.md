@@ -16,9 +16,9 @@ wall-clock result on every host.
 
 ## Reproduce the benchmark
 
-The current 2026-07-31 run used the `run-optimizations` branch at prek commit
-`9cf36ccd239e0f82cb2cd0d4daebacc38c9b5ba0`, rustc `1.97.0`, pre-commit
-`4.6.1`, pre-commit-hooks `v6.0.0`, and hyperfine `1.20.0`.
+The exact 2026-07-31 run used prek commit `5ed44a3ef86486895723c940766042e61567b3c4`,
+rustc `1.97.0`, pre-commit `4.6.1`, pre-commit-hooks `v6.0.0`, and hyperfine
+`1.20.0`.
 
 Requirements:
 
@@ -66,27 +66,25 @@ The main controls are environment variables:
 - `scripts/run-*.sh` contain the exact hyperfine command order.
 - `scripts/summarize.py` pools the forward and reverse samples by command and
   reports their medians.
-- `results/2026-07-31-run-optimizations/` preserves the raw data behind the
-  current published numbers.
-- `results/2026-07-31/` preserves the preceding run at prek commit `5ed44a3e`.
+- `results/2026-07-31/` preserves the raw data behind the published numbers.
 
 ## Published result
 
-On the Apple M3 Pro system described in
-`results/2026-07-31-run-optimizations/environment.txt`, the pooled medians were:
+On the Apple M3 Pro system described in `results/2026-07-31/environment.txt`,
+the pooled medians were:
 
 | Comparison | pre-commit | prek |
 | -- | -: | -: |
-| 1 no-op hook | 231 ms | 107 ms |
-| 10 sequential no-op hooks | 546 ms | 431 ms |
+| 1 no-op hook | 224 ms | 68 ms |
+| 10 sequential no-op hooks | 458 ms | 255 ms |
 
 | Runtime stage | Median |
 | -- | -: |
-| pre-commit reference | 2,028 ms |
-| prek, no fast path | 1,860 ms |
-| prek, fast path | 203 ms |
-| prek, fast path + priority | 161 ms |
-| prek, fast path + priority + 2 projects | 139 ms |
+| pre-commit reference | 1,737 ms |
+| prek, no fast path | 1,438 ms |
+| prek, fast path | 213 ms |
+| prek, fast path + priority | 172 ms |
+| prek, fast path + priority + 2 projects | 135 ms |
 
 See the raw hyperfine samples and generated summary in
-`results/2026-07-31-run-optimizations/` for the complete data.
+`results/2026-07-31/` for the complete data.
