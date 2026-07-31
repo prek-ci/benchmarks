@@ -1,0 +1,14 @@
+benchmark_commit=1d549779a35ad2726e8fe5061571f2937bb0033d
+date_utc=2026-07-31T15:31:12Z
+prek=prek 0.4.11+37 (9cf36ccd2 2026-07-31)
+pre_commit=pre-commit 4.6.1
+hyperfine=hyperfine 1.20.0
+git=git version 2.39.5 (Apple Git-154)
+uname=Darwin Mac.lan 24.6.0 Darwin Kernel Version 24.6.0: Tue Apr 21 20:16:56 PDT 2026; root:xnu-11417.140.69.710.16~1/RELEASE_ARM64_T6030 arm64
+rustc=rustc 1.97.0 (2d8144b78 2026-07-07)
+os=macOS 15.7.7
+cpu=Apple M3 Pro
+memory_bytes=19327352832
+warmups=5
+runs_per_order=15
+diff_runs=30
