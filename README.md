@@ -16,9 +16,8 @@ wall-clock result on every host.
 
 ## Reproduce the benchmark
 
-The exact 2026-07-31 run used prek commit `5ed44a3ef86486895723c940766042e61567b3c4`,
-rustc `1.97.0`, pre-commit `4.6.1`, pre-commit-hooks `v6.0.0`, and hyperfine
-`1.20.0`.
+The reproducible setup pins prek `0.4.12`, rustc `1.97.0`, pre-commit `4.6.1`,
+pre-commit-hooks `v6.0.0`, and hyperfine `1.20.0`.
 
 Requirements:
 
@@ -51,6 +50,7 @@ The main controls are environment variables:
 
 | Variable | Default | Purpose |
 | -- | -- | -- |
+| `PREK_VERSION` | `0.4.12` | prek release tag to build |
 | `WARMUP` | `5` | Warmup runs per command and command order |
 | `RUNS` | `15` | Measured runs per command and command order |
 | `DIFF_RUNS` | `30` | Measured runs for the clean `git diff` check |

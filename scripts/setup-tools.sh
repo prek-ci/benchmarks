@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 TOOLS_DIR=${TOOLS_DIR:-"$ROOT/.tools"}
-PREK_REVISION=${PREK_REVISION:-5ed44a3ef86486895723c940766042e61567b3c4}
+PREK_VERSION=${PREK_VERSION:-0.4.12}
 RUST_TOOLCHAIN_VERSION=${RUST_TOOLCHAIN_VERSION:-1.97.0}
 PRE_COMMIT_VERSION=${PRE_COMMIT_VERSION:-4.6.1}
 PRE_COMMIT_PYTHON=${PRE_COMMIT_PYTHON:-3.14.6}
@@ -35,7 +35,7 @@ if [[ -f "$PREK_SOURCE_DIR/.git/shallow" ]]; then
 else
   git -C "$PREK_SOURCE_DIR" fetch --tags origin
 fi
-git -C "$PREK_SOURCE_DIR" checkout --detach "$PREK_REVISION"
+git -C "$PREK_SOURCE_DIR" checkout --detach "v$PREK_VERSION"
 touch "$PREK_SOURCE_DIR/.git/HEAD"
 
 export CARGO_TARGET_DIR
@@ -54,5 +54,5 @@ uv pip install \
   "pre-commit==$PRE_COMMIT_VERSION"
 
 echo "Pinned tools are ready:"
-echo "  prek:       $CARGO_TARGET_DIR/profiling/prek"
+echo "  prek:       $CARGO_TARGET_DIR/profiling/prek (v$PREK_VERSION)"
 echo "  pre-commit: $PRE_COMMIT_VENV/bin/pre-commit"
