@@ -4,55 +4,36 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 TOOLS_DIR=${TOOLS_DIR:-"$ROOT/.tools"}
 PREK_VERSION=${PREK_VERSION:-0.4.12}
-RUST_TOOLCHAIN_VERSION=${RUST_TOOLCHAIN_VERSION:-1.97.0}
 PRE_COMMIT_VERSION=${PRE_COMMIT_VERSION:-4.6.1}
-PRE_COMMIT_PYTHON=${PRE_COMMIT_PYTHON:-3.14.6}
-PREK_SOURCE_DIR="$TOOLS_DIR/prek-src"
-CARGO_TARGET_DIR=${CARGO_TARGET_DIR:-"$TOOLS_DIR/cargo-target"}
+PYTHON_VERSION=${PYTHON_VERSION:-3.14.6}
+PREK_TOOL_DIR="$TOOLS_DIR/uv-tools"
+PREK_BIN_DIR="$TOOLS_DIR/bin"
 PRE_COMMIT_VENV="$TOOLS_DIR/pre-commit"
 
-for tool in git rustup uv; do
+for tool in git uv; do
   if ! command -v "$tool" >/dev/null 2>&1; then
     echo "Required tool not found: $tool" >&2
     exit 1
   fi
 done
 
-mkdir -p "$TOOLS_DIR"
+mkdir -p "$TOOLS_DIR" "$PREK_BIN_DIR"
 
-if [[ ! -d "$PREK_SOURCE_DIR/.git" ]]; then
-  git clone --filter=blob:none https://github.com/j178/prek.git "$PREK_SOURCE_DIR"
-fi
-
-if ! git -C "$PREK_SOURCE_DIR" diff --quiet || \
-   ! git -C "$PREK_SOURCE_DIR" diff --cached --quiet; then
-  echo "Refusing to change a modified tool checkout: $PREK_SOURCE_DIR" >&2
-  exit 1
-fi
-
-if [[ -f "$PREK_SOURCE_DIR/.git/shallow" ]]; then
-  git -C "$PREK_SOURCE_DIR" fetch --unshallow --tags origin
-else
-  git -C "$PREK_SOURCE_DIR" fetch --tags origin
-fi
-git -C "$PREK_SOURCE_DIR" checkout --detach "v$PREK_VERSION"
-touch "$PREK_SOURCE_DIR/.git/HEAD"
-
-export CARGO_TARGET_DIR
-rustup toolchain install "$RUST_TOOLCHAIN_VERSION"
-rustup run "$RUST_TOOLCHAIN_VERSION" cargo build \
-  --manifest-path "$PREK_SOURCE_DIR/Cargo.toml" \
-  -p prek \
-  --profile profiling \
-  --locked
+UV_TOOL_DIR="$PREK_TOOL_DIR" \
+UV_TOOL_BIN_DIR="$PREK_BIN_DIR" \
+uv tool install \
+  --force \
+  --no-build \
+  --python "$PYTHON_VERSION" \
+  "prek==$PREK_VERSION"
 
 if [[ ! -x "$PRE_COMMIT_VENV/bin/python" ]]; then
-  uv venv --python "$PRE_COMMIT_PYTHON" "$PRE_COMMIT_VENV"
+  uv venv --python "$PYTHON_VERSION" "$PRE_COMMIT_VENV"
 fi
 uv pip install \
   --python "$PRE_COMMIT_VENV/bin/python" \
   "pre-commit==$PRE_COMMIT_VERSION"
 
 echo "Pinned tools are ready:"
-echo "  prek:       $CARGO_TARGET_DIR/profiling/prek (v$PREK_VERSION)"
+echo "  prek:       $PREK_BIN_DIR/prek"
 echo "  pre-commit: $PRE_COMMIT_VENV/bin/pre-commit"

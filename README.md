@@ -16,18 +16,17 @@ wall-clock result on every host.
 
 ## Reproduce the benchmark
 
-The reproducible setup pins prek `0.4.12`, rustc `1.97.0`, pre-commit `4.6.1`,
-pre-commit-hooks `v6.0.0`, and hyperfine `1.20.0`.
+The reproducible setup pins prek `0.4.12`, pre-commit `4.6.1`, pre-commit-hooks
+`v6.0.0`, and hyperfine `1.20.0`.
 
 Requirements:
 
 - Git
-- Rustup
 - [uv](https://docs.astral.sh/uv/)
 - [hyperfine](https://github.com/sharkdp/hyperfine)
 - Python 3
 
-Build and install the pinned runners, then execute the complete suite:
+Install the pinned runners, then execute the complete suite:
 
 ```console
 ./scripts/setup-tools.sh
@@ -50,7 +49,8 @@ The main controls are environment variables:
 
 | Variable | Default | Purpose |
 | -- | -- | -- |
-| `PREK_VERSION` | `0.4.12` | prek release tag to build |
+| `PREK_VERSION` | `0.4.12` | prek wheel to install from PyPI |
+| `PYTHON_VERSION` | `3.14.6` | Python used for the isolated tool environments |
 | `WARMUP` | `5` | Warmup runs per command and command order |
 | `RUNS` | `15` | Measured runs per command and command order |
 | `DIFF_RUNS` | `30` | Measured runs for the clean `git diff` check |

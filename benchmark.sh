@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-PREK_BIN=${PREK_BIN:-"$ROOT/.tools/cargo-target/profiling/prek"}
+PREK_BIN=${PREK_BIN:-"$ROOT/.tools/bin/prek"}
 PRE_COMMIT_BIN=${PRE_COMMIT_BIN:-"$ROOT/.tools/pre-commit/bin/pre-commit"}
 HYPERFINE_BIN=${HYPERFINE_BIN:-hyperfine}
 PYTHON_BIN=${PYTHON_BIN:-python3}
