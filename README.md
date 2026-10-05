@@ -1,7 +1,7 @@
 # prek benchmarks
 
 This repository contains the fixture generator, pinned configurations,
-benchmark commands, and raw results used by the prek benchmark documentation.
+benchmark commands, and current results used by the prek benchmark documentation.
 It measures two related questions:
 
 1. How much runner overhead is visible when every hook executes `true`?
@@ -30,14 +30,13 @@ Install the pinned runners, then execute the complete suite:
 
 ```console
 ./scripts/setup-tools.sh
-PATH="$PWD/.tools/pre-commit/bin:$PATH" ./benchmark.sh
+./benchmark.sh
 ```
 
 `benchmark.sh` generates fresh repositories, warms both runner caches, performs
-five warmups, runs each command 15 times in each order, and writes the raw JSON
-plus a pooled-median summary under `results/local-<timestamp>/`.
-Adding the pre-commit environment to `PATH` makes its pinned Python available
-to both runners when preparing hook environments.
+five warmups, runs each command 15 times in each order, and writes a
+pooled-median summary under `results/local-<timestamp>/`. Local outputs are
+ignored by Git; only the current result summary is committed.
 
 To use existing binaries instead of the pinned setup:
 
@@ -56,20 +55,8 @@ The main controls are environment variables:
 | `WARMUP` | `5` | Warmup runs per command and command order |
 | `RUNS` | `15` | Measured runs per command and command order |
 | `DIFF_RUNS` | `30` | Measured runs for the clean `git diff` check |
-| `RESULTS_DIR` | timestamped directory | Raw JSON and summary destination |
+| `RESULTS_DIR` | timestamped directory | Local benchmark output directory |
 | `KEEP_WORKDIR` | `0` | Set to `1` to retain generated fixtures |
-
-## Repository layout
-
-- `configs/` contains every hook configuration used by the comparisons.
-- `scripts/create-fixtures.sh` deterministically creates and validates the
-  960-file corpus and its sequential, priority, and two-project layouts. It
-  verifies the resulting Git tree hashes against the published workload.
-- `scripts/run-*.sh` contain the exact hyperfine command order.
-- `scripts/summarize.py` pools the forward and reverse samples by command and
-  reports their medians.
-- `results/2026-10-05/` contains the prek 0.5.5 samples and environment details.
-- `results/2026-07-31/` preserves the original published measurements.
 
 ## Published result
 
@@ -78,24 +65,19 @@ medians on an Apple M3 Pro with 12 cores and 18 GiB RAM running macOS 27.0:
 
 | Comparison | pre-commit | prek |
 | -- | -: | -: |
-| 1 no-op hook | 231 ms | 70 ms |
-| 10 sequential no-op hooks | 556 ms | 303 ms |
+| 1 no-op hook | 228 ms | 67 ms |
+| 10 sequential no-op hooks | 533 ms | 299 ms |
 
 | Runtime stage | Median |
 | -- | -: |
-| pre-commit reference | 1,945 ms |
-| prek, no fast path | 1,571 ms |
-| prek, fast path | 115 ms |
-| prek, fast path + priority | 96 ms |
-| prek, fast path + priority + 2 projects | 82 ms |
+| pre-commit reference | 1,942 ms |
+| prek, no fast path | 1,534 ms |
+| prek, fast path | 105 ms |
+| prek, fast path + priority | 94 ms |
+| prek, fast path + priority + 2 projects | 80 ms |
 
 Each row pools all 30 samples, including outliers. A separate 30-run clean
 `git diff` check had a median of 31 ms. Forward and reverse medians differed by
-up to 15%, so treat these timings and ratios as approximate. See the
-[run notes](results/2026-10-05/README.md),
-[environment](results/2026-10-05/environment.txt), and
-[generated summary](results/2026-10-05/summary.md) for the complete data.
-
-The [original results](results/2026-07-31/README.md) remain available. The OS,
-prek version, and background load differ across dates, so the historical runs
-are not a controlled comparison of prek versions.
+up to 14%, relative to the faster order, so treat these timings and ratios as
+approximate. The smaller scheduling gains are close to that variation. See the
+[result summary](results/2026-10-05/summary.md) for speedups and sample counts.
