@@ -60,17 +60,6 @@ The main controls are environment variables:
 | `RESULTS_DIR` | timestamped directory | Local benchmark output directory |
 | `KEEP_WORKDIR` | `0` | Set to `1` to retain generated fixtures |
 
-## Repository layout
-
-- `configs/` contains every hook configuration used by the comparisons.
-- `scripts/create-fixtures.sh` deterministically creates and validates the
-  960-file corpus and its sequential, priority, and two-project layouts. It
-  verifies the resulting Git tree hashes against the published workload.
-- `scripts/run-*.sh` contain the exact hyperfine command order.
-- `scripts/summarize.py` pools the forward and reverse samples by command and
-  reports their medians.
-- `results/2026-10-05/summary.md` contains the current prek 0.5.5 results.
-
 ## Published result
 
 On 2026-10-05, the prek 0.5.5 release wheel produced the following pooled
