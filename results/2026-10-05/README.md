@@ -4,33 +4,44 @@ This run measures the prek 0.5.5 binary wheel installed from PyPI with
 `uv tool install --no-build`. The executable reports
 `prek 0.5.5 (77cca6719 2026-10-05)`. Both runners use Python 3.14.6 for hook
 environments; pre-commit is pinned to 4.6.1 and pre-commit-hooks to v6.0.0.
+All three generated Git trees match the original 960-file workload.
 
-The fixture generator and timing scripts are unchanged from benchmark commit
-[`38dbddb`](https://github.com/prek-ci/benchmarks/tree/38dbddbeccdf6578c7e9c60e67e88fb20360ebdf).
-All three generated Git trees match the original 960-file workload. Installation
-and network activity finish before timing begins; hook environments and
-filesystem caches are warm.
+The benchmark ran from commit
+[`a360462`](https://github.com/prek-ci/benchmarks/tree/a36046203410b0f1d38bc355bbc737b14a46d982)
+with unchanged scripts and configuration. It created fresh fixtures and hook
+environments, then warmed the caches before timing. Installation and network
+activity are excluded from the measurements.
 
-- `framework-forward.json` and `framework-reverse.json`: one and ten generic
-  no-op hooks, with runner order reversed between files.
-- `runtime-forward.json` and `runtime-reverse.json`: pre-commit, prek without
-  the fast path, fast path, priority scheduling, and two projects.
-- `git-diff.json`: 30 clean-worktree `git diff` samples.
-- `summary.md`: pooled medians calculated from all raw samples.
-- `environment.txt`: hardware, software, binary checksum, and sampling details.
-- `fixture-trees.txt`: Git tree hashes for the three fixture layouts.
+Each command order uses five warmups followed by 15 measured runs. The standalone
+`git diff` check uses five warmups and 30 measured runs. All 300 measured
+invocations returned exit code zero, and all tracked fixture files remained
+unchanged. Every sample is retained, including slow outliers.
 
-Each command order uses five warmups followed by 15 measured runs. All 300
-measured invocations returned exit code zero, and the fixture worktrees remained
-clean afterward. No samples were removed. The standalone `git diff` measurement
-uses five warmups and 30 measured runs.
+## Variation and host load
 
-Forward and reverse medians differed by up to 14.8%, in the fast-path stage
-(114 ms versus 130 ms). The two-project stage differed by 8.9% (79 ms versus
-87 ms); the other runtime stages differed by less than 2%. Several commands
-had slower outliers. Treat the reported medians and speedups as approximate
-measurements of this workload, not a promise for other repositories.
+Forward and reverse medians differed by up to 14.0%, relative to the faster
+order. The two-project medians were 86 ms and 76 ms; pre-commit's were
+1,880 ms and 2,037 ms, an 8.4% difference. Every other command differed by at
+most 5.0%. Several commands had slow outliers.
 
-To reproduce the run, follow the root README's setup and benchmark commands.
-The OS, package versions, and background load differ from historical runs, so
-these measurements are not a controlled comparison of prek releases.
+The host remained on AC power. Snapshots before fixture preparation and after
+measurement showed background CPU activity, compressed memory, and swapping;
+there was no recorded thermal or performance warning. These snapshots are
+included in `host-load.txt`. They do not establish the cause of individual slow
+samples, but the machine was not an isolated benchmark host.
+
+Treat the timings and ratios as approximate. The smaller scheduling gains are
+close to the observed order-to-order variation. These results are not a
+controlled comparison with older prek versions.
+
+## Files and reproduction
+
+- `framework-forward.json` and `framework-reverse.json`: one and ten no-op hooks.
+- `runtime-forward.json` and `runtime-reverse.json`: the runtime ladder.
+- `git-diff.json`: the standalone clean-worktree diff measurement.
+- `summary.md`: the summary generated from all samples.
+- `environment.txt`: software, hardware, binary checksum, and sampling details.
+- `fixture-trees.txt`: the verified Git trees for all three layouts.
+- `host-load.txt`: host snapshots surrounding the complete benchmark invocation.
+
+Follow the root README's setup and benchmark commands to reproduce the workload.

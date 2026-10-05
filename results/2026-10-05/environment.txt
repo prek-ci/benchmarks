@@ -1,5 +1,5 @@
-benchmark_commit=38dbddbeccdf6578c7e9c60e67e88fb20360ebdf
-date_utc=2026-10-05T06:42:54Z
+benchmark_commit=a36046203410b0f1d38bc355bbc737b14a46d982
+date_utc=2026-10-05T06:59:54Z
 prek=prek 0.5.5 (77cca6719 2026-10-05)
 pre_commit=pre-commit 4.6.1
 hyperfine=hyperfine 1.20.0
@@ -21,3 +21,4 @@ workload_files=960
 pooled_samples_per_command=30
 prek_concurrent_hooks=default
 prek_concurrent_batches=default
+power_source=AC

@@ -68,14 +68,12 @@ The main controls are environment variables:
 - `scripts/run-*.sh` contain the exact hyperfine command order.
 - `scripts/summarize.py` pools the forward and reverse samples by command and
   reports their medians.
-- `results/2026-10-05-rerun/` contains the latest prek 0.5.5 samples and a
-  comparison with the earlier run.
-- `results/2026-10-05/` preserves the first prek 0.5.5 run.
+- `results/2026-10-05/` contains the prek 0.5.5 samples and environment details.
 - `results/2026-07-31/` preserves the original published measurements.
 
 ## Published result
 
-In the 2026-10-05 rerun, the prek 0.5.5 release wheel produced the following pooled
+On 2026-10-05, the prek 0.5.5 release wheel produced the following pooled
 medians on an Apple M3 Pro with 12 cores and 18 GiB RAM running macOS 27.0:
 
 | Comparison | pre-commit | prek |
@@ -95,9 +93,9 @@ Each row pools all 30 samples, including outliers. A separate 30-run clean
 `git diff` check had a median of 31 ms. Forward and reverse medians differed by
 up to 14%, relative to the faster order, so treat these timings and ratios as
 approximate. The smaller scheduling gains are close to that variation. See the
-[run comparison and notes](results/2026-10-05-rerun/README.md),
-[environment](results/2026-10-05-rerun/environment.txt), and
-[generated summary](results/2026-10-05-rerun/summary.md) for the complete data.
+[run notes](results/2026-10-05/README.md),
+[environment](results/2026-10-05/environment.txt), and
+[generated summary](results/2026-10-05/summary.md) for the complete data.
 
 The [original results](results/2026-07-31/README.md) remain available. The OS,
 prek version, and background load differ across dates, so the historical runs
