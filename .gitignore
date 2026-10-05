@@ -2,4 +2,6 @@
 .tools/
 .work/
 results/local-*/
+results/**/*.json
+results/**/*.txt
 .DS_Store

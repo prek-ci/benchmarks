@@ -1,7 +1,7 @@
 # prek benchmarks
 
 This repository contains the fixture generator, pinned configurations,
-benchmark commands, and raw results used by the prek benchmark documentation.
+benchmark commands, and current results used by the prek benchmark documentation.
 It measures two related questions:
 
 1. How much runner overhead is visible when every hook executes `true`?
@@ -34,8 +34,9 @@ PATH="$PWD/.tools/pre-commit/bin:$PATH" ./benchmark.sh
 ```
 
 `benchmark.sh` generates fresh repositories, warms both runner caches, performs
-five warmups, runs each command 15 times in each order, and writes the raw JSON
-plus a pooled-median summary under `results/local-<timestamp>/`.
+five warmups, runs each command 15 times in each order, and writes a
+pooled-median summary under `results/local-<timestamp>/`. Local outputs are
+ignored by Git; only the current result summary is committed.
 Adding the pre-commit environment to `PATH` makes its pinned Python available
 to both runners when preparing hook environments.
 
@@ -56,7 +57,7 @@ The main controls are environment variables:
 | `WARMUP` | `5` | Warmup runs per command and command order |
 | `RUNS` | `15` | Measured runs per command and command order |
 | `DIFF_RUNS` | `30` | Measured runs for the clean `git diff` check |
-| `RESULTS_DIR` | timestamped directory | Raw JSON and summary destination |
+| `RESULTS_DIR` | timestamped directory | Local benchmark output directory |
 | `KEEP_WORKDIR` | `0` | Set to `1` to retain generated fixtures |
 
 ## Repository layout
@@ -68,8 +69,7 @@ The main controls are environment variables:
 - `scripts/run-*.sh` contain the exact hyperfine command order.
 - `scripts/summarize.py` pools the forward and reverse samples by command and
   reports their medians.
-- `results/2026-10-05/` contains the prek 0.5.5 samples and environment details.
-- `results/2026-07-31/` preserves the original published measurements.
+- `results/2026-10-05/summary.md` contains the current prek 0.5.5 results.
 
 ## Published result
 
@@ -93,10 +93,4 @@ Each row pools all 30 samples, including outliers. A separate 30-run clean
 `git diff` check had a median of 31 ms. Forward and reverse medians differed by
 up to 14%, relative to the faster order, so treat these timings and ratios as
 approximate. The smaller scheduling gains are close to that variation. See the
-[run notes](results/2026-10-05/README.md),
-[environment](results/2026-10-05/environment.txt), and
-[generated summary](results/2026-10-05/summary.md) for the complete data.
-
-The [original results](results/2026-07-31/README.md) remain available. The OS,
-prek version, and background load differ across dates, so the historical runs
-are not a controlled comparison of prek versions.
+[result summary](results/2026-10-05/summary.md) for speedups and sample counts.
