@@ -16,8 +16,8 @@ wall-clock result on every host.
 
 ## Reproduce the benchmark
 
-The reproducible setup pins prek `0.4.12`, pre-commit `4.6.1`, pre-commit-hooks
-`v6.0.0`, and hyperfine `1.20.0`.
+The reproducible setup pins prek `0.5.5`, pre-commit `4.6.1`, Python `3.14.6`,
+and pre-commit-hooks `v6.0.0`. The recorded runs use hyperfine `1.20.0`.
 
 Requirements:
 
@@ -30,12 +30,14 @@ Install the pinned runners, then execute the complete suite:
 
 ```console
 ./scripts/setup-tools.sh
-./benchmark.sh
+PATH="$PWD/.tools/pre-commit/bin:$PATH" ./benchmark.sh
 ```
 
 `benchmark.sh` generates fresh repositories, warms both runner caches, performs
 five warmups, runs each command 15 times in each order, and writes the raw JSON
 plus a pooled-median summary under `results/local-<timestamp>/`.
+Adding the pre-commit environment to `PATH` makes its pinned Python available
+to both runners when preparing hook environments.
 
 To use existing binaries instead of the pinned setup:
 
@@ -49,7 +51,7 @@ The main controls are environment variables:
 
 | Variable | Default | Purpose |
 | -- | -- | -- |
-| `PREK_VERSION` | `0.4.12` | prek wheel to install from PyPI |
+| `PREK_VERSION` | `0.5.5` | prek wheel to install from PyPI |
 | `PYTHON_VERSION` | `3.14.6` | Python used for the isolated tool environments |
 | `WARMUP` | `5` | Warmup runs per command and command order |
 | `RUNS` | `15` | Measured runs per command and command order |
@@ -66,25 +68,34 @@ The main controls are environment variables:
 - `scripts/run-*.sh` contain the exact hyperfine command order.
 - `scripts/summarize.py` pools the forward and reverse samples by command and
   reports their medians.
-- `results/2026-07-31/` preserves the raw data behind the published numbers.
+- `results/2026-10-05/` contains the prek 0.5.5 samples and environment details.
+- `results/2026-07-31/` preserves the original published measurements.
 
 ## Published result
 
-On the Apple M3 Pro system described in `results/2026-07-31/environment.txt`,
-the pooled medians were:
+On 2026-10-05, the prek 0.5.5 release wheel produced the following pooled
+medians on an Apple M3 Pro with 12 cores and 18 GiB RAM running macOS 27.0:
 
 | Comparison | pre-commit | prek |
 | -- | -: | -: |
-| 1 no-op hook | 224 ms | 68 ms |
-| 10 sequential no-op hooks | 458 ms | 255 ms |
+| 1 no-op hook | 231 ms | 70 ms |
+| 10 sequential no-op hooks | 556 ms | 303 ms |
 
 | Runtime stage | Median |
 | -- | -: |
-| pre-commit reference | 1,737 ms |
-| prek, no fast path | 1,438 ms |
-| prek, fast path | 213 ms |
-| prek, fast path + priority | 172 ms |
-| prek, fast path + priority + 2 projects | 135 ms |
+| pre-commit reference | 1,945 ms |
+| prek, no fast path | 1,571 ms |
+| prek, fast path | 115 ms |
+| prek, fast path + priority | 96 ms |
+| prek, fast path + priority + 2 projects | 82 ms |
 
-See the raw hyperfine samples and generated summary in
-`results/2026-07-31/` for the complete data.
+Each row pools all 30 samples, including outliers. A separate 30-run clean
+`git diff` check had a median of 31 ms. Forward and reverse medians differed by
+up to 15%, so treat these timings and ratios as approximate. See the
+[run notes](results/2026-10-05/README.md),
+[environment](results/2026-10-05/environment.txt), and
+[generated summary](results/2026-10-05/summary.md) for the complete data.
+
+The [original results](results/2026-07-31/README.md) remain available. The OS,
+prek version, and background load differ across dates, so the historical runs
+are not a controlled comparison of prek versions.
