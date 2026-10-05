@@ -24,6 +24,10 @@ if [[ ! -x "$PRE_COMMIT_BIN" ]]; then
   exit 1
 fi
 
+# Use the same Python for both runners' hook environments.
+PRE_COMMIT_BIN_DIR=$(cd "$(dirname "$PRE_COMMIT_BIN")" && pwd)
+export PATH="$PRE_COMMIT_BIN_DIR:$PATH"
+
 if ! command -v "$HYPERFINE_BIN" >/dev/null 2>&1; then
   echo "hyperfine not found: $HYPERFINE_BIN" >&2
   exit 1

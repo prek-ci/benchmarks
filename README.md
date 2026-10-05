@@ -30,15 +30,13 @@ Install the pinned runners, then execute the complete suite:
 
 ```console
 ./scripts/setup-tools.sh
-PATH="$PWD/.tools/pre-commit/bin:$PATH" ./benchmark.sh
+./benchmark.sh
 ```
 
 `benchmark.sh` generates fresh repositories, warms both runner caches, performs
 five warmups, runs each command 15 times in each order, and writes a
 pooled-median summary under `results/local-<timestamp>/`. Local outputs are
 ignored by Git; only the current result summary is committed.
-Adding the pre-commit environment to `PATH` makes its pinned Python available
-to both runners when preparing hook environments.
 
 To use existing binaries instead of the pinned setup:
 
